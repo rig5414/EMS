@@ -1,0 +1,30 @@
+@layer components {
+  /* Small custom tweaks to get an EMS look */
+  /* card */
+  .ems-card {
+    @apply bg-white rounded-lg shadow-sm border border-gray-100;
+  }
+
+  /* small rounded badge */
+  .ems-badge {
+    @apply inline-flex items-center justify-center bg-blue-50 text-blue-600 text-xs font-semibold px-2 py-0.5 rounded-full;
+  }
+
+  /* sidebar accent */
+  .sidebar-accent {
+    @apply bg-blue-50 text-blue-600 border-l-4 border-blue-600;
+  }
+
+  /* subtle large shadow used on main containers */
+  .ems-shadow {
+    box-shadow: 0 1px 2px rgba(16,24,40,0.04), 0 8px 24px rgba(16,24,40,0.06);
+  }
+
+  /* avatar circle */
+  .ems-avatar {
+    @apply w-10 h-10 rounded-full flex items-center justify-center bg-gradient-to-br from-gray-700 to-gray-900 text-white font-semibold;
+  }
+
+  /* polished small text color */
+  .ems-muted { @apply text-gray-500; }
+}
