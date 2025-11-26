@@ -11,12 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('departments', function (Blueprint $table) {
-            $table->id();
-            $table->string('name')->unique();
-            $table->text('description')->nullable();
-            $table->foreignId('hod_id')->nullable();
-            $table->timestamps();
+        Schema::table('departments', function (Blueprint $table) {
+            $table->foreign('hod_id')->references('id')->on('employees')->nullOnDelete();
         });
     }
 
@@ -25,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('departments');
+        Schema::table('departments', function (Blueprint $table) {
+            $table->dropForeign(['hod_id']);
+        });
     }
 };
