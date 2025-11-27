@@ -8,27 +8,27 @@ use App\Models\Employee;
 use Filament\Forms;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Select;
-use Filament\Resources\Form;
+use Filament\Schemas\Schema;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables;
+use BackedEnum;
 
 class DepartmentResource extends Resource
 {
     protected static ?string $model = Department::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static BackedEnum|string|null $navigationIcon = 'heroicon-o-building-office';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                TextInput::make('name')->required()->maxLength(255),
-                TextInput::make('description')->maxLength(65535),
-                Select::make('hod_id')->label('Head of Department')
-                    ->options(fn () => Employee::all()->pluck('name', 'id')->toArray())
-                    ->nullable(),
-            ]);
+        return Schema::start([
+            TextInput::make('name')->required()->maxLength(255),
+            TextInput::make('description')->maxLength(65535),
+            Select::make('hod_id')->label('Head of Department')
+                ->options(fn () => Employee::all()->pluck('name', 'id')->toArray())
+                ->nullable(),
+        ]);
     }
 
     public static function table(Table $table): Table

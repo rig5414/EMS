@@ -8,29 +8,29 @@ use App\Models\Department;
 use Filament\Forms;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Select;
-use Filament\Resources\Form;
+use Filament\Schemas\Schema;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
+use Filament\Tables\Table;
 use Filament\Tables;
+use BackedEnum;
 
 class EmployeeResource extends Resource
 {
     protected static ?string $model = Employee::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-user-group';
+    protected static BackedEnum|string|null $navigationIcon = 'heroicon-o-users';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                TextInput::make('name')->required()->maxLength(255),
-                TextInput::make('email')->required()->email()->maxLength(255),
-                TextInput::make('position')->maxLength(255),
-                TextInput::make('salary')->numeric(),
-                Select::make('departments')
-                    ->multiple()
-                    ->options(fn () => Department::all()->pluck('name', 'id')->toArray()),
-            ]);
+        return Schema::start([
+            TextInput::make('name')->required()->maxLength(255),
+            TextInput::make('email')->required()->email()->maxLength(255),
+            TextInput::make('position')->maxLength(255),
+            TextInput::make('salary')->numeric(),
+            Select::make('departments')
+                ->multiple()
+                ->options(fn () => Department::all()->pluck('name', 'id')->toArray()),
+        ]);
     }
 
     public static function table(Table $table): Table

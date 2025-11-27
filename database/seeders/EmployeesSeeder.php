@@ -15,11 +15,11 @@ class EmployeesSeeder extends Seeder
         $now = now();
 
         $users = [
-            ['name' => 'John Ochieng', 'email' => 'john.ochieng@ems.local', 'department' => 'HR'],
-            ['name' => 'Mary Kipchoge', 'email' => 'mary.kipchoge@ems.local', 'department' => 'FINANCE'],
-            ['name' => 'James Mwangi', 'email' => 'james.mwangi@ems.local', 'department' => 'HSE'],
-            ['name' => 'Sarah Kariuki', 'email' => 'sarah.kariuki@ems.local', 'department' => 'TRANSPORT'],
-            ['name' => 'Peter Nyambura', 'email' => 'peter.nyambura@ems.local', 'department' => 'ICT'],
+            ['name' => 'Raymond Pekeshe', 'email' => 'rpekeshe@bulkstream.com', 'department' => 'HR'],
+            ['name' => 'Swabir Mohammed', 'email' => 'swabirm@bulkstream.com', 'department' => 'FINANCE'],
+            ['name' => 'Mariaka Gilbert', 'email' => 'mariaka.gilbert@bulkstream.com', 'department' => 'HSE'],
+            ['name' => 'Victor Chagusia', 'email' => 'victor.chagusia@bulkstream.com', 'department' => 'TRANSPORT'],
+            ['name' => 'Manasseh Telle', 'email' => 'manasseh.telle@bulkstream.com', 'department' => 'ICT'],
         ];
 
         foreach ($users as $idx => $u) {
@@ -35,7 +35,7 @@ class EmployeesSeeder extends Seeder
                 'FINANCE' => 'Finance Officer',
                 'HSE' => 'HSE Manager',
                 'TRANSPORT' => 'Transport Coordinator',
-                'ICT' => 'IT Manager',
+                'ICT' => 'IT Intern',
                 default => 'Staff',
             };
 
