@@ -12,34 +12,15 @@ class DatabaseSeeder extends Seeder
 {
     use WithoutModelEvents;
 
-    /**
-        // Structural seeders moved here (departments, employees, admin)
-        $this->call(DepartmentsSeeder::class);
-        $this->call(EmployeesSeeder::class);
-        $this->call(AdminUserSeeder::class);
-     */
     public function run(): void
     {
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        // Seed canonical departments first
+        $this->call(DepartmentsSeeder::class);
 
-        // Create 10 employees
-        $employees = Employee::factory(10)->create();
+        // Seed employees and attach to departments
+        $this->call(EmployeesSeeder::class);
 
-        // Create 5 departments
-        $departments = Department::factory(5)->create();
-
-        // Assign some employees as HODs
-        $departments[0]->update(['hod_id' => $employees[0]->id]);
-        $departments[1]->update(['hod_id' => $employees[1]->id]);
-        $departments[2]->update(['hod_id' => $employees[2]->id]);
-
-        // Assign employees to departments
-        foreach ($employees as $employee) {
-            $randomDepts = $departments->random(rand(1, 3))->pluck('id');
-            $employee->departments()->attach($randomDepts);
-        }
+        // Seed admin user
+        $this->call(AdminUserSeeder::class);
     }
 }
