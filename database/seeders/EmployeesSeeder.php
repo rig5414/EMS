@@ -3,8 +3,10 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use App\Models\User;
+use App\Models\Employee;
+use App\Models\Department;
 
 class EmployeesSeeder extends Seeder
 {
@@ -21,50 +23,38 @@ class EmployeesSeeder extends Seeder
         ];
 
         foreach ($users as $idx => $u) {
-            // create user if not exists
-            $userId = DB::table('users')->where('email', $u['email'])->value('id');
-            if (! $userId) {
-                $userId = DB::table('users')->insertGetId([
-                    'name' => $u['name'],
-                    'email' => $u['email'],
-                    'password' => Hash::make('password'),
-                    'created_at' => $now,
-                    'updated_at' => $now,
-                ]);
-            }
+            // Upsert user using Eloquent so we don't create duplicates
+            $user = User::updateOrCreate(
+                ['email' => $u['email']],
+                ['name' => $u['name'], 'password' => Hash::make('password')]
+            );
 
-            // create employee if not exists
-            $employeeId = DB::table('employees')->where('email', $u['email'])->value('id');
-            if (! $employeeId) {
-                $position = match($u['department']) {
-                    'HR' => 'HR Manager',
-                    'FINANCE' => 'Finance Officer',
-                    'HSE' => 'HSE Manager',
-                    'TRANSPORT' => 'Transport Coordinator',
-                    'ICT' => 'IT Manager',
-                    default => 'Staff',
-                };
+            // Upsert employee
+            $position = match($u['department']) {
+                'HR' => 'HR Manager',
+                'FINANCE' => 'Finance Officer',
+                'HSE' => 'HSE Manager',
+                'TRANSPORT' => 'Transport Coordinator',
+                'ICT' => 'IT Manager',
+                default => 'Staff',
+            };
 
-                $employeeId = DB::table('employees')->insertGetId([
-                    'name' => $u['name'],
-                    'email' => $u['email'],
-                    'position' => $position,
-                    'salary' => 0,
-                    'created_at' => $now,
-                    'updated_at' => $now,
-                ]);
-            }
+            $employee = Employee::updateOrCreate(
+                ['email' => $u['email']],
+                ['name' => $u['name'], 'position' => $position, 'salary' => 0]
+            );
 
-            // attach to department
-            $deptId = DB::table('departments')->where('name', $u['department'])->value('id');
-            if ($deptId) {
-                $exists = DB::table('department_employee')->where('employee_id', $employeeId)->where('department_id', $deptId)->exists();
-                if (! $exists) {
-                    DB::table('department_employee')->insert(['employee_id' => $employeeId, 'department_id' => $deptId, 'created_at' => $now, 'updated_at' => $now]);
-                }
+            // Attach to department
+            $dept = Department::where('name', $u['department'])->first();
+            if ($dept) {
+                $employee->departments()->syncWithoutDetaching([$dept->id]);
 
                 if ($idx === 0) {
-                    DB::table('departments')->where('id', $deptId)->update(['hod_id' => $employeeId]);
+                    // set HOD if not set
+                    if (! $dept->hod_id) {
+                        $dept->hod_id = $employee->id;
+                        $dept->save();
+                    }
                 }
             }
         }
