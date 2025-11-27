@@ -71,7 +71,9 @@
                     <div class="flex items-center gap-4 relative">
                         <!-- Search -->
                         <div class="hidden sm:block">
-                            <input type="text" placeholder="Search" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-48">
+                            <form action="{{ route('search') }}" method="GET" class="">
+                                <input name="q" value="{{ request('q') }}" type="text" placeholder="Search employees, departments..." class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-48">
+                            </form>
                         </div>
 
                         <!-- Notifications -->

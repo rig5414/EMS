@@ -18,6 +18,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('departments', DepartmentController::class);
     Route::post('/departments/{department}/employees', [DepartmentController::class, 'addEmployee'])->name('departments.addEmployee');
     Route::delete('/departments/{department}/employees/{employee}', [DepartmentController::class, 'removeEmployee'])->name('departments.removeEmployee');
+    Route::get('search', [\App\Http\Controllers\SearchController::class, 'index'])->name('search');
 });
 
 // Breeze / profile routes

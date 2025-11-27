@@ -11,10 +11,21 @@ class EmployeeController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $employees = Employee::with('departments')->paginate(10);
-        return view('employees.index', compact('employees'));
+        $q = $request->query('q');
+
+        $employees = Employee::with('departments')
+            ->when($q, function ($query, $q) {
+                $query->where('name', 'like', "%{$q}%")
+                      ->orWhere('email', 'like', "%{$q}%")
+                      ->orWhere('position', 'like', "%{$q}%");
+            })
+            ->orderBy('name')
+            ->paginate(10)
+            ->appends(['q' => $q]);
+
+        return view('employees.index', compact('employees', 'q'));
     }
 
     /**

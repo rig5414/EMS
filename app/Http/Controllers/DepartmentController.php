@@ -11,10 +11,20 @@ class DepartmentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $departments = Department::with('employees', 'hod')->paginate(10);
-        return view('departments.index', compact('departments'));
+        $q = $request->query('q');
+
+        $departments = Department::with('employees', 'hod')
+            ->when($q, function ($query, $q) {
+                $query->where('name', 'like', "%{$q}%")
+                      ->orWhere('description', 'like', "%{$q}%");
+            })
+            ->orderBy('name')
+            ->paginate(10)
+            ->appends(['q' => $q]);
+
+        return view('departments.index', compact('departments', 'q'));
     }
 
     /**

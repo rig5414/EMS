@@ -13,7 +13,10 @@ class DatabaseSeeder extends Seeder
     use WithoutModelEvents;
 
     /**
-     * Seed the application's database.
+        // Structural seeders moved here (departments, employees, admin)
+        $this->call(DepartmentsSeeder::class);
+        $this->call(EmployeesSeeder::class);
+        $this->call(AdminUserSeeder::class);
      */
     public function run(): void
     {
